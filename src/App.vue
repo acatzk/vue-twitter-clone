@@ -11,7 +11,7 @@
 
       <template #twitter-tabs>
         <button 
-          v-for="tab in tabs" :key="tab.id"
+          v-for="(tab, index) in tabs" :key="index"
           :class="`flex items-center py-2 px-4 hover:bg-blue-100 rounded-full mr-auto focus:outline-none mb-3 text-gray-800 ${ id === tab.id ? 'text-blue-500' : ''}`"
           @click="id = tab.id"
         >
@@ -43,7 +43,6 @@
           </div>
           <i class="hidden lg:block fas fa-angle-down ml-auto text-lg"></i>
         </button> <!-- USER AVATAR -->
-
         <div 
           v-if="dropdown"
           class="absolute bottom-0 left-0 w-full rounded-lg shadow-md border bg-white mb-16"
@@ -76,10 +75,68 @@
             Log out @angryboy
           </button>
         </div> <!-- DROP DOWN PROFILE IMAGE -->
+      </template>
+    </side-bar>
 
+
+    <!-- Tweets -->
+    <main-bar>
+
+    </main-bar>
+
+    <!-- Trending -->
+    <trending-section>
+      <template #twitter-search>
+        <input class="pl-12 rounded-full w-full p-2 bg-gray-300 focus:outline-none text-sm" placeholder="Search Twitter" />
+		    <i class="fas fa-search absolute left-0 top-0 mt-5 ml-12 text-sm text-gray-500"></i>
+      </template>
+      <template #trending-title>
+        <p class="text-lg font-bold text-gray-800">Trends For You</p>
+				<i class="fas fa-cog text-lg text-blue-500"></i>
+      </template>
+      <template #trending-list>
+        <button 
+          v-for="(trend, index) in trending" :key="index"
+          class="w-full flex justify-between hover:bg-gray-500 p-3 border-t border-gray-300 focus:outline-none"
+        >
+					<div>
+						<p class="text-sm text-left leading-tight text-gray-700">{{ trend.top }}</p>
+            <p class="font-bold text-left leading-tight text-gray-800">{{ trend.title }}</p>
+            <p class="text-left leading-tight">{{ trend.bottom }}</p>
+					</div>
+          <i class="fas fa-angle-down text-lg"></i>
+				</button>
+        <button class="p-3 w-full hover:bg-gray-500 text-left text-blue-500 border-t border-gray-500 focus:outline-none">
+          Show More
+        </button>
       </template>
 
-    </side-bar>
+      <template #user-title>
+        <p class="text-lg font-bold text-gray-800">Who To Follow</p>
+      </template>
+      <template #user-list>
+        <button 
+          class="w-full flex hover:bg-gray-500 p-3 border-t border-gray-300 focus:outline-none"
+          v-for="(friend, index) in friends" :key="index"
+        >
+					<img 
+            :src="friend.src" 
+            alt="profile"
+            class="w-12 h-12 rounded-full border border-gray-600"
+          >
+          <div class="hidden lg:block ml-4">
+            <p class="text-sm font-bold leading-tight text-gray-800">{{ friend.name }}</p>
+            <p class="text-sm leading-tight text-gray-800">{{ friend.handle }}</p>
+          </div>
+          <button class="ml-auto focus:outline-none text-sm text-blue-500 py-1 px-4 rounded-full border-2 border-blue-500">
+            Follow
+          </button>
+				</button>
+        <button class="p-3 w-full hover:bg-gray-500 text-left text-blue-500 border-t border-gray-500 focus:outline-none">
+          Show More
+        </button>
+      </template>
+    </trending-section>
 
   </div>
 </template>
@@ -89,7 +146,9 @@
     name: 'app',
 
     components: {
-      SideBar: () => import('@/components/SideBar')
+      SideBar: () => import('@/components/SideBar'),
+      MainBar: () => import('@/components/MainBar'),
+      TrendingSection: () => import('@/components/TrendingSection')
     },
 
     data () {
@@ -105,7 +164,19 @@
           {icon: 'fas fa-ellipsis-h', title: 'More', id: 'more'}
         ],
         dropdown: false,
-        id: 'home'
+        id: 'home',
+        trending: [
+          {top: 'Trending in TX', title: 'Gigi', bottom: 'Trending with: Rip Gigi'},
+          {top: 'Music', title: 'We Won', bottom: '135K Tweets'},
+          {top: 'Pop', title: 'Blue Ivy', bottom: '40k tweets'},
+          {top: 'Trending in US', title: 'Denim Day', bottom: '40k tweets'},
+          {top: 'Trending', title: 'When Beyonce', bottom: '25.4k tweets'},
+        ],
+        friends: [
+          {src: 'https://avatars1.githubusercontent.com/u/65806779?s=460&u=03752090c3e22f46c1b7759b59daf1d871aada85&v=4', name: 'Gilchrist Calunia', handle: '@gilchrist32'},
+          {src: 'https://avatars2.githubusercontent.com/u/26340308?s=460&u=f9dcea548505a99a2c873efb8b933aac0fe07abd&v=4', name: 'Jerome Villaruel', handle: '@veoscript:)'},
+          {src: 'https://avatars2.githubusercontent.com/u/29187606?s=460&u=4503388a883486415e5d8a8a9eda1365cc7beeae&v=4', name: 'Resamae Cabulang', handle: '@mikie27'}
+        ]
       }
     }
   }
