@@ -82,6 +82,125 @@
     <!-- Tweets -->
     <main-bar>
 
+      <template #home-title>
+        <h1 class="text-xl font-bold">Home</h1>
+        <i class="far fa-star text-xl text-blue-500"></i>
+      </template>
+
+      <template #tweet-field>
+        <div class="flex-none">
+          <img 
+            src="https://avatars0.githubusercontent.com/u/38458781?s=460&u=f62c697c75225996d2b9ed5c8bd755cbaa19f2db&v=4" 
+            alt="profile"
+            class="w-12 h-12 rounded-full border border-gray-300"
+          />
+        </div>
+        <form 
+          class="w-full px-4 relative"
+          @submit.prevent="onTweetStatus"
+        >
+          <textarea 
+            placeholder="What's on your mind?" 
+            class="mt-3 pb-3 w-full focus:outline-none"
+            v-model="tweet.content"
+          ></textarea>
+          <div class="flex items-center">
+            <i class="text-lg text-blue-500 mr-4 far fa-image"></i>
+            <i class="text-lg text-blue-500 mr-4 fas fa-film"></i>
+            <i class="text-lg text-blue-500 mr-4 far fa-chart-bar"></i>
+            <i class="text-lg text-blue-500 mr-4 far fa-smile"></i>
+          </div>
+          <button 
+            type="submit"
+            class="h-10 px-4 text-white font-semibold bg-blue-500 hover:bg-blue-600 focus:outline-none rounded-full absolute bottom-0 right-0"
+            @click.prevent="onTweetStatus"
+          >
+            Tweet
+          </button>
+        </form>
+      </template>
+
+      <template #tweet-user-fresh-post>
+        <div 
+          v-for="(tweet, index) in tweets" :key="index"
+          class="w-full p-4 border-b hover:bg-lighter flex"
+        >
+          <div class="flex-none mr-4">
+            <img src="https://avatars0.githubusercontent.com/u/38458781?s=460&u=f62c697c75225996d2b9ed5c8bd755cbaa19f2db&v=4" class="h-12 w-12 rounded-full flex-none"/>
+          </div>
+          <div class="w-full">
+            <div class="flex items-center w-full">
+              <p class="font-semibold"> Joshua galit </p>
+              <p class="text-sm  text-gray-800 ml-2"> @angryboy </p>
+              <p class="text-sm  text-gray-800 ml-2"> 1 sec </p>
+              <i class="fas fa-angle-down  text-gray-800 ml-auto"></i>
+            </div>
+            <p class="py-2">
+              {{ tweet.content }}
+            </p>
+            <div class="flex items-center justify-between w-full">
+              <div class="flex items-center text-sm text-dark">
+                <i class="far fa-comment mr-3"></i>
+                <p> 0 </p>
+              </div>
+              <div class="flex items-center text-sm text-gray-800">
+                <i class="fas fa-retweet mr-3"></i>
+                <p> 0 </p>
+              </div>
+              <div class="flex items-center text-sm text-gray-800">
+                <i class="fas fa-heart mr-3"></i>
+                <p> 1 </p>
+              </div>
+              <div class="flex items-center text-sm text-gray-800">
+                <i class="fas fa-share-square mr-3"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <template #tweet-posts>
+        <div 
+          class="w-full p-4 border-b hover:bg-blue-100 flex"
+          v-for="(follow, index) in following" :key="index"
+        >
+          <div class="flex-none mr-4">
+            <img 
+              :src="follow.src" 
+              alt="profile" 
+              class="w-12 h-12 rounded-full border border-gray-300 flex-none"
+            >
+          </div>
+          <div class="w-full">
+            <div class="flex items-center w-full">
+              <p class="font-semibold">{{ follow.name }}</p>
+              <p class="text-sm text-gray-800 ml-2">{{ follow.handle }}</p>
+              <p class="text-sm text-gray-800 ml-2">{{ follow.time }}</p>
+              <i class="fas fa-angle-down  text-gray-800 ml-auto"></i>
+            </div>
+            <p class="py-2">
+              {{ follow.tweet }}
+            </p>
+            <div class="flex items-center justify-between w-full">
+              <div class="flex items-center text-sm text-gray-800">
+                <i class="far fa-comment mr-3"></i>
+                <p>{{ follow.comments }}</p>
+              </div>
+              <div class="flex items-center text-sm text-gray-800">
+                <i class="fas fa-retweet mr-3"></i>
+                <p>{{ follow.retweets }}</p>
+              </div>
+              <div class="flex items-center text-sm text-gray-800">
+                <i class="fas fa-heart mr-3"></i>
+                <p>{{ follow.like }}</p>
+              </div>
+              <div class="flex items-center text-sm text-gray-800">
+                <i class="fas fa-share-square mr-3"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
     </main-bar>
 
     <!-- Trending -->
@@ -123,7 +242,7 @@
             :src="friend.src" 
             alt="profile"
             class="w-12 h-12 rounded-full border border-gray-600"
-          >
+          />
           <div class="hidden lg:block ml-4">
             <p class="text-sm font-bold leading-tight text-gray-800">{{ friend.name }}</p>
             <p class="text-sm leading-tight text-gray-800">{{ friend.handle }}</p>
@@ -153,6 +272,12 @@
 
     data () {
       return {
+        tweet: { 
+          content: ''
+        },
+        tweets: [
+          { content: 'It is so nice outside!' }
+        ],
         tabs: [
           {icon: 'fas fa-home', title: 'Home', id:'home'},
           {icon: 'fas fa-hashtag', title: 'Explore', id: 'explore'},
@@ -174,12 +299,28 @@
         ],
         friends: [
           {src: 'https://avatars1.githubusercontent.com/u/65806779?s=460&u=03752090c3e22f46c1b7759b59daf1d871aada85&v=4', name: 'Gilchrist Calunia', handle: '@gilchrist32'},
-          {src: 'https://avatars2.githubusercontent.com/u/26340308?s=460&u=f9dcea548505a99a2c873efb8b933aac0fe07abd&v=4', name: 'Jerome Villaruel', handle: '@veoscript:)'},
+          {src: 'https://avatars2.githubusercontent.com/u/26340308?s=460&u=f9dcea548505a99a2c873efb8b933aac0fe07abd&v=4', name: 'Jerome Villaruel', handle: '@veoscript'},
           {src: 'https://avatars2.githubusercontent.com/u/29187606?s=460&u=4503388a883486415e5d8a8a9eda1365cc7beeae&v=4', name: 'Resamae Cabulang', handle: '@mikie27'}
+        ],
+        following: [
+          {src: 'https://avatars1.githubusercontent.com/u/65806779?s=460&u=03752090c3e22f46c1b7759b59daf1d871aada85&v=4', name: 'Gilchrist Calunia', handle: '@gilchrist32', time: '20 min', tweet: 'Should I just quarantine on mars??', comments: '1,000', retweets: '550', like: '1,000,003'},
+          {src: 'https://avatars2.githubusercontent.com/u/26340308?s=460&u=f9dcea548505a99a2c873efb8b933aac0fe07abd&v=4', name: 'Jerome Villaruel', handle: '@veoscript', time: '55 min', tweet: 'Should me and the rock do another sub-par movie together????', comments: '2,030', retweets: '50', like: '20,003'},
+          {src: 'https://avatars2.githubusercontent.com/u/29187606?s=460&u=4503388a883486415e5d8a8a9eda1365cc7beeae&v=4', name: 'Resamae Cabulang', handle: '@mikie27', time: '1.4 hr', tweet: 'Haha just made a flame thrower. Shld I sell them?', comments: '100,000', retweets: '1,000,002', like: '5,000,003'},
+          {src: 'https://avatars0.githubusercontent.com/u/38458781?s=460&u=f62c697c75225996d2b9ed5c8bd755cbaa19f2db&v=4', name: 'Joshua Galit', handle: '@angryboy', time: '1.4 hr', tweet: 'Just did something crazyyyyyyy', comments: '100,500', retweets: '1,000,032', like: '5,000,103'}
         ]
+      }
+    },
+
+    methods: {
+      onTweetStatus () {
+        let newTweet = {
+          content: this.tweet.content
+        }
+        this.tweets.push (newTweet)
+        this.tweet.content = null
       }
     }
   }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" src="@/assets/css/app.scss"></style>
